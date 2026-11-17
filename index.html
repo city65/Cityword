@@ -2,93 +2,180 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CIVITAS | Cidade Virtual</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIVITAS | Cidade Virtual</title>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #101827;
-      color: white;
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+<style>
+* { box-sizing: border-box; }
 
-    .container {
-      width: 90%;
-      max-width: 430px;
-      padding: 35px;
-      background: #1b293c;
-      border: 1px solid #35445b;
-      border-radius: 18px;
-      text-align: center;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #101827;
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    h1 {
-      font-size: 38px;
-      letter-spacing: 5px;
-      margin-bottom: 5px;
-    }
+.container {
+  width: 90%;
+  max-width: 430px;
+  padding: 35px;
+  background: #1b293c;
+  border: 1px solid #35445b;
+  border-radius: 18px;
+  text-align: center;
+}
 
-    p {
-      color: #a8b7ca;
-    }
+h1 {
+  font-size: 38px;
+  letter-spacing: 5px;
+  margin-bottom: 5px;
+}
 
-    input {
-      width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      border: 1px solid #40516a;
-      border-radius: 8px;
-      background: #101827;
-      color: white;
-    }
+p { color: #a8b7ca; }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      border: 0;
-      border-radius: 8px;
-      background: #25865c;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
+input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: 1px solid #40516a;
+  border-radius: 8px;
+  background: #101827;
+  color: white;
+}
 
-    button:hover {
-      background: #30a673;
-    }
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: 0;
+  border-radius: 8px;
+  background: #25865c;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
 
-    .footer {
-      margin-top: 25px;
-      font-size: 12px;
-    }
-  </style>
+button:hover { background: #30a673; }
+
+#message {
+  margin-top: 18px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  margin-top: 25px;
+  font-size: 12px;
+  color: #a8b7ca;
+}
+</style>
 </head>
+
 <body>
 
-  <main class="container">
-    <h1>CIVITAS</h1>
-    <p>Uma cidade. Uma comunidade. Uma sociedade.</p>
+<main class="container">
+  <h1>CIVITAS</h1>
+  <p>Uma cidade. Uma comunidade. Uma sociedade.</p>
 
-    <input type="email" placeholder="Seu e-mail">
-    <input type="password" placeholder="Sua senha">
+  <input id="name" type="text"
+    placeholder="Nome do cidadão">
 
-    <button>Entrar na cidade</button>
-    <button>Criar minha conta</button>
+  <input id="email" type="email"
+    placeholder="Seu e-mail">
 
-    <div class="footer">
-      CIVITAS © 2026 — Cidade Virtual
-    </div>
-  </main>
+  <input id="password" type="password"
+    placeholder="Sua senha">
+
+  <button id="login">Entrar na cidade</button>
+  <button id="register">Criar minha conta</button>
+
+  <div id="message"></div>
+
+  <div class="footer">
+    CIVITAS © 2026 — Cidade Virtual
+  </div>
+</main>
+
+<script type="module">
+import { createClient } from
+'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const supabase = createClient(
+  'https://ojkaoccbjftynyrhovov.supabase.co',
+ 'sb_publishable__2VJrwnXFtik4exKRqJqUQ_w-LnmEty'
+);
+
+const message = document.getElementById('message');
+
+function showMessage(text) {
+  message.textContent = text;
+}
+
+document.getElementById('register')
+.addEventListener('click', async () => {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!name || !email || password.length < 8) {
+    showMessage('Preencha todos os campos. A senha precisa ter pelo menos 8 caracteres.');
+    return;
+  }
+
+  showMessage('Criando sua conta...');
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        display_name: name
+      }
+    }
+  });
+
+  if (error) {
+    showMessage('Erro: ' + error.message);
+    return;
+  }
+
+  if (data.session) {
+    showMessage('Conta criada! Bem-vindo ao CIVITAS.');
+  } else {
+    showMessage('Conta criada! Confira seu e-mail para confirmar o cadastro.');
+  }
+});
+
+document.getElementById('login')
+.addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!email || !password) {
+    showMessage('Informe seu e-mail e sua senha.');
+    return;
+  }
+
+  showMessage('Verificando acesso...');
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showMessage('Erro: ' + error.message);
+    return;
+  }
+
+  showMessage('Login realizado! Bem-vindo ao CIVITAS.');
+});
+</script>
 
 </body>
 </html>
