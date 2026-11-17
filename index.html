@@ -132,11 +132,12 @@ document.getElementById('register')
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      data: {
-        display_name: name
-      }
-    }
+options: {
+  data: {
+    display_name: name
+  },
+  emailRedirectTo: 'https://city65.github.io/Cityword/'
+}
   });
 
   if (error) {
