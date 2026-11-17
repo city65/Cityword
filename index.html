@@ -3,180 +3,430 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CIVITAS | Cidade Virtual</title>
-
 <style>
-* { box-sizing: border-box; }
+*{box-sizing:border-box}
+body{margin:0;background:#101827;color:white;font-family:Arial,sans-serif}
+button,input{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: #101827;
-  color: white;
-  font-family: Arial, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* LOGIN */
+#loginScreen{
+ min-height:100vh;display:flex;align-items:center;
+ justify-content:center;padding:20px
 }
-
-.container {
-  width: 90%;
-  max-width: 430px;
-  padding: 35px;
-  background: #1b293c;
-  border: 1px solid #35445b;
-  border-radius: 18px;
-  text-align: center;
+.login{
+ width:100%;max-width:410px;background:#1b293c;
+ border:1px solid #35445b;border-radius:16px;
+ padding:30px;text-align:center
 }
-
-h1 {
-  font-size: 38px;
-  letter-spacing: 5px;
-  margin-bottom: 5px;
+.logo{font-size:38px;letter-spacing:6px;font-weight:bold}
+.subtitle{color:#a8b7ca;margin-bottom:25px}
+input{
+ width:100%;padding:13px;margin:7px 0;
+ border:1px solid #40516a;border-radius:7px;
+ background:#101827;color:white
 }
-
-p { color: #a8b7ca; }
-
-input {
-  width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border: 1px solid #40516a;
-  border-radius: 8px;
-  background: #101827;
-  color: white;
+.action{
+ width:100%;padding:13px;margin-top:12px;
+ border:0;border-radius:7px;background:#25865c;
+ color:white;font-weight:bold
 }
+.secondary{background:#35445b}
+#message{color:#cbd5e1;font-size:13px;margin-top:15px}
 
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 15px;
-  border: 0;
-  border-radius: 8px;
-  background: #25865c;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+/* CIDADE */
+#cityScreen{min-height:100vh}
+header{
+ background:#182438;border-bottom:1px solid #35445b;
+ padding:13px 20px;display:flex;
+ justify-content:space-between;align-items:center;
+ gap:12px;flex-wrap:wrap
 }
-
-button:hover { background: #30a673; }
-
-#message {
-  margin-top: 18px;
-  font-size: 14px;
-  overflow-wrap: anywhere;
+.brand{font-weight:bold;letter-spacing:3px;font-size:22px}
+.userInfo{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+.smallButton{
+ background:#35445b;color:white;border:0;
+ border-radius:6px;padding:9px 12px
 }
-
-.footer {
-  margin-top: 25px;
-  font-size: 12px;
-  color: #a8b7ca;
+.layout{
+ display:grid;grid-template-columns:210px 1fr;
+ gap:15px;padding:15px;max-width:1500px;margin:auto
+}
+aside{
+ background:#1b293c;border:1px solid #35445b;
+ border-radius:10px;padding:15px;height:max-content
+}
+.navButton{
+ display:block;width:100%;padding:13px;
+ margin:6px 0;text-align:left;color:white;
+ background:#25354b;border:0;border-radius:6px
+}
+.navButton.active{background:#25865c}
+main{min-width:0}
+.panel{
+ background:#1b293c;border:1px solid #35445b;
+ border-radius:10px;padding:15px;margin-bottom:12px
+}
+#mapCanvas{
+ display:block;width:100%;height:auto;
+ background:#6eaa57;border-radius:7px;
+ image-rendering:pixelated;
+ touch-action:manipulation
+}
+.mapHint{font-size:12px;color:#a8b7ca;margin-top:10px}
+.stat{font-size:25px;font-weight:bold;color:#75dda9}
+#pageContent{min-height:250px}
+@media(max-width:700px){
+ .layout{grid-template-columns:1fr}
+ aside{display:flex;gap:6px;overflow-x:auto}
+ .navButton{min-width:max-content;width:auto}
 }
 </style>
 </head>
-
 <body>
 
-<main class="container">
-  <h1>CIVITAS</h1>
-  <p>Uma cidade. Uma comunidade. Uma sociedade.</p>
+<section id="loginScreen">
+ <div class="login">
+  <div class="logo">CIVITAS</div>
+  <p class="subtitle">Uma cidade. Uma comunidade. Uma sociedade.</p>
 
-  <input id="name" type="text"
-    placeholder="Nome do cidadão">
+  <input id="name" placeholder="Nome do cidadão">
+  <input id="email" type="email" placeholder="Seu e-mail">
+  <input id="password" type="password" placeholder="Sua senha">
 
-  <input id="email" type="email"
-    placeholder="Seu e-mail">
-
-  <input id="password" type="password"
-    placeholder="Sua senha">
-
-  <button id="login">Entrar na cidade</button>
-  <button id="register">Criar minha conta</button>
-
+  <button class="action" id="loginBtn">Entrar na cidade</button>
+  <button class="action secondary" id="registerBtn">Criar minha conta</button>
   <div id="message"></div>
+ </div>
+</section>
 
-  <div class="footer">
-    CIVITAS © 2026 — Cidade Virtual
+<section id="cityScreen" class="hidden">
+ <header>
+  <div class="brand">CIVITAS</div>
+  <div class="userInfo">
+   <span id="citizenName">Cidadão</span>
+   <span>🪙 <b id="balance">---</b> CIVI</span>
+   <button class="smallButton" id="logoutBtn">Sair</button>
   </div>
-</main>
+ </header>
+
+ <div class="layout">
+  <aside>
+   <button class="navButton active" data-page="city">🏙️ Cidade</button>
+   <button class="navButton" data-page="profile">👤 Meu perfil</button>
+   <button class="navButton" data-page="wallet">💰 Carteira</button>
+   <button class="navButton" data-page="market">🛒 Mercado</button>
+  </aside>
+
+  <main>
+   <div id="cityPage">
+    <div class="panel">
+     <h2>Bem-vindo à cidade!</h2>
+     <p>Explore as ruas e conheça seu novo lar.</p>
+    </div>
+    <div class="panel">
+     <canvas id="mapCanvas" width="960" height="600"></canvas>
+     <p class="mapHint">
+      Use W A S D ou as setas para movimentar seu personagem.
+     </p>
+    </div>
+   </div>
+
+   <div id="pageContent" class="panel hidden"></div>
+  </main>
+ </div>
+</section>
 
 <script type="module">
-import { createClient } from
+import {createClient} from
 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-const supabase = createClient(
-  'https://ojkaoccbjftynyrhovov.supabase.co',
- 'sb_publishable__2VJrwnXFtik4exKRqJqUQ_w-LnmEty'
+const supabase=createClient(
+ 'https://ojkaoccbjftynyrhovov.supabase.co',
+ 'COLE_SUA_PUBLISHABLE_KEY_AQUI'
 );
 
-const message = document.getElementById('message');
+const $=id=>document.getElementById(id);
+const loginScreen=$('loginScreen');
+const cityScreen=$('cityScreen');
+let currentUser=null;
+let profile=null;
+let wallet=null;
 
-function showMessage(text) {
-  message.textContent = text;
+function message(text){
+ $('message').textContent=text;
 }
 
-document.getElementById('register')
-.addEventListener('click', async () => {
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
+async function loadCitizen(user){
+ currentUser=user;
 
-  if (!name || !email || password.length < 8) {
-    showMessage('Preencha todos os campos. A senha precisa ter pelo menos 8 caracteres.');
-    return;
-  }
+ const [p,w]=await Promise.all([
+  supabase.from('profiles')
+   .select('username,display_name')
+   .eq('id',user.id).single(),
 
-  showMessage('Criando sua conta...');
+  supabase.from('wallets')
+   .select('balance')
+   .eq('user_id',user.id).single()
+ ]);
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-options: {
-  data: {
-    display_name: name
-  },
-  emailRedirectTo: 'https://city65.github.io/Cityword/'
+ if(p.error || w.error){
+  message('Não foi possível carregar seu perfil ou carteira. Verifique as tabelas e políticas RLS.');
+  console.error(p.error,w.error);
+  return;
+ }
+
+ profile=p.data;
+ wallet=w.data;
+
+ $('citizenName').textContent=profile.display_name;
+ $('balance').textContent=wallet.balance;
+
+ loginScreen.classList.add('hidden');
+ cityScreen.classList.remove('hidden');
 }
-  });
 
-  if (error) {
-    showMessage('Erro: ' + error.message);
-    return;
-  }
+$('registerBtn').onclick=async()=>{
+ const name=$('name').value.trim();
+ const email=$('email').value.trim();
+ const password=$('password').value;
 
-  if (data.session) {
-    showMessage('Conta criada! Bem-vindo ao CIVITAS.');
-  } else {
-    showMessage('Conta criada! Confira seu e-mail para confirmar o cadastro.');
+ if(!name||!email||password.length<8){
+  message('Preencha os campos. A senha precisa ter pelo menos 8 caracteres.');
+  return;
+ }
+
+ message('Criando cidadão...');
+
+ const {data,error}=await supabase.auth.signUp({
+  email,password,
+  options:{
+   data:{display_name:name},
+   emailRedirectTo:'https://city65.github.io/Cityword/'
   }
+ });
+
+ if(error){message(error.message);return;}
+
+ if(data.session){
+  await loadCitizen(data.user);
+ }else{
+  message('Conta criada! Confirme seu e-mail e depois entre na cidade.');
+ }
+};
+
+$('loginBtn').onclick=async()=>{
+ const email=$('email').value.trim();
+ const password=$('password').value;
+
+ if(!email||!password){
+  message('Informe seu e-mail e sua senha.');
+  return;
+ }
+
+ message('Verificando acesso...');
+
+ const {data,error}=await supabase.auth.signInWithPassword({
+  email,password
+ });
+
+ if(error){message(error.message);return;}
+
+ await loadCitizen(data.user);
+};
+
+$('logoutBtn').onclick=async()=>{
+ await supabase.auth.signOut();
+ currentUser=null;
+ cityScreen.classList.add('hidden');
+ loginScreen.classList.remove('hidden');
+ message('Você saiu da cidade.');
+};
+
+supabase.auth.onAuthStateChange((event,session)=>{
+ if(event==='SIGNED_IN' && session){
+  loadCitizen(session.user);
+ }
 });
 
-document.getElementById('login')
-.addEventListener('click', async () => {
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
+const {data:{session}}=await supabase.auth.getSession();
+if(session) await loadCitizen(session.user);
 
-  if (!email || !password) {
-    showMessage('Informe seu e-mail e sua senha.');
-    return;
-  }
+/* NAVEGAÇÃO */
+document.querySelectorAll('.navButton').forEach(button=>{
+ button.onclick=()=>{
+  document.querySelectorAll('.navButton')
+   .forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
 
-  showMessage('Verificando acesso...');
+  const page=button.dataset.page;
+  $('cityPage').classList.toggle('hidden',page!=='city');
+  $('pageContent').classList.toggle('hidden',page==='city');
 
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
+  const content={
+   profile:`<h2>Meu perfil</h2>
+    <p>Nome: ${escapeHTML(profile?.display_name||'')}</p>
+    <p>Usuário: ${escapeHTML(profile?.username||'')}</p>`,
+   wallet:`<h2>Minha carteira</h2>
+    <p>Saldo disponível:</p>
+    <div class="stat">${wallet?.balance??0} CIVI</div>`,
+   market:`<h2>Mercado da cidade</h2>
+    <p>Em breve você poderá comprar e vender produtos de outros cidadãos.</p>`
+  };
 
-  if (error) {
-    showMessage('Erro: ' + error.message);
-    return;
-  }
-
-  showMessage('Login realizado! Bem-vindo ao CIVITAS.');
+  if(page!=='city') $('pageContent').innerHTML=content[page]||'';
+ };
 });
+
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;',
+  '"':'&quot;',"'":'&#39;'
+ }[c]));
+}
+
+/* MAPA 2D */
+const canvas=$('mapCanvas');
+const ctx=canvas.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+
+const tile=40;
+const player={x:480,y:300,speed:3};
+const keys={};
+
+window.addEventListener('keydown',e=>{
+ if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ']
+ .includes(e.key)) e.preventDefault();
+ keys[e.key.toLowerCase()]=true;
+});
+window.addEventListener('keyup',e=>{
+ keys[e.key.toLowerCase()]=false;
+});
+
+function building(x,y,w,h,color,roof){
+ ctx.fillStyle='#35443a';
+ ctx.fillRect(x+4,y+6,w,h);
+ ctx.fillStyle=color;
+ ctx.fillRect(x,y,w,h-7);
+ ctx.fillStyle=roof;
+ ctx.fillRect(x+3,y+3,w-6,9);
+ ctx.fillStyle='#27374a';
+ for(let a=x+10;a<x+w-8;a+=22){
+  ctx.fillRect(a,y+20,10,13);
+ }
+ ctx.fillStyle='#795c3c';
+ ctx.fillRect(x+w/2-6,y+h-20,12,20);
+}
+
+function drawMap(){
+ ctx.clearRect(0,0,960,600);
+
+ // Grama
+ ctx.fillStyle='#75ad5a';
+ ctx.fillRect(0,0,960,600);
+
+ // Textura da grama
+ for(let y=10;y<600;y+=40){
+  for(let x=10;x<960;x+=40){
+   ctx.fillStyle='#6ca350';
+   ctx.fillRect(x,y,3,3);
+  }
+ }
+
+ // Ruas
+ ctx.fillStyle='#777d82';
+ ctx.fillRect(0,250,960,100);
+ ctx.fillRect(420,0,100,600);
+
+ // Calçadas
+ ctx.fillStyle='#c7c4ae';
+ ctx.fillRect(0,242,960,8);
+ ctx.fillRect(0,350,960,8);
+ ctx.fillRect(412,0,8,600);
+ ctx.fillRect(520,0,8,600);
+
+ // Faixas
+ ctx.fillStyle='#f0e5a9';
+ for(let x=0;x<960;x+=65)ctx.fillRect(x,298,30,4);
+ for(let y=0;y<600;y+=65)ctx.fillRect(468,y,4,30);
+
+ // Praça
+ ctx.fillStyle='#438b50';
+ ctx.fillRect(560,50,320,150);
+ ctx.fillStyle='#d3b98c';
+ ctx.fillRect(680,90,80,65);
+ ctx.fillStyle='#3d9551';
+ ctx.fillRect(715,105,12,12);
+
+ // Prédios
+ building(55,55,125,120,'#d8b77f','#9b6449');
+ building(220,70,135,105,'#b6c7c8','#526f84');
+ building(570,260,135,115,'#d5a16a','#9d5146');
+ building(750,400,150,125,'#b7b1d1','#625b91');
+
+ // Loja
+ building(55,400,140,115,'#e4cb82','#bd6245');
+
+ // Complexo administrativo
+ ctx.fillStyle='#303c4d';
+ ctx.fillRect(555,405,340,155);
+ ctx.fillStyle='#9b9e9f';
+ ctx.fillRect(575,425,300,115);
+ ctx.fillStyle='#414d5d';
+ ctx.fillRect(635,440,180,75);
+ ctx.fillStyle='#d0b77d';
+ ctx.fillRect(675,450,100,55);
+ ctx.fillStyle='#bfc9d2';
+ ctx.font='bold 13px Arial';
+ ctx.fillText('COMPLEXO ADMINISTRATIVO',590,550);
+ ctx.fillStyle='#b5c3ce';
+ ctx.fillRect(710,530,55,10);
+
+ // Personagem pixel art
+ const x=Math.round(player.x);
+ const y=Math.round(player.y);
+ ctx.fillStyle='#28374b';
+ ctx.fillRect(x-8,y+12,16,5);
+ ctx.fillStyle='#e8bd8e';
+ ctx.fillRect(x-7,y-13,14,13);
+ ctx.fillStyle='#47352d';
+ ctx.fillRect(x-8,y-16,16,6);
+ ctx.fillStyle='#2764ad';
+ ctx.fillRect(x-9,y,18,15);
+ ctx.fillStyle='#e8bd8e';
+ ctx.fillRect(x-12,y+2,4,11);
+ ctx.fillRect(x+8,y+2,4,11);
+ ctx.fillStyle='#27364b';
+ ctx.fillRect(x-8,y+15,6,8);
+ ctx.fillRect(x+2,y+15,6,8);
+
+ // Nome do personagem
+ ctx.fillStyle='white';
+ ctx.font='12px Arial';
+ ctx.textAlign='center';
+ ctx.fillText('VOCÊ',x,y-22);
+ ctx.textAlign='left';
+}
+
+function update(){
+ if(cityScreen.classList.contains('hidden'))return;
+
+ if(keys['w']||keys['arrowup'])player.y-=player.speed;
+ if(keys['s']||keys['arrowdown'])player.y+=player.speed;
+ if(keys['a']||keys['arrowleft'])player.x-=player.speed;
+ if(keys['d']||keys['arrowright'])player.x+=player.speed;
+
+ player.x=Math.max(12,Math.min(948,player.x));
+ player.y=Math.max(20,Math.min(575,player.y));
+
+ drawMap();
+ requestAnimationFrame(update);
+}
+drawMap();
+requestAnimationFrame(update);
 </script>
-
 </body>
 </html>
